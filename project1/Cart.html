@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+
+    <title>View Cart</title>
+    <style>
+        .Cart {
+            background-color: blue;
+            color: white;
+            padding: 10px; /* optional: add padding for better appearance */
+        }
+    </style>
+</head>
+<body>
+    <h1 class="Cart">Welcome to the Shop</h1>
+            {{ range . }}
+            <div>
+                <h2>{{ .Name }}</h2>
+                <p>{{ .Description }}</p>
+                <p>Price: ${{ .Price }}</p>
+                <form action="/addToCart" method="post">
+                    <input type="hidden" name="productId" value="{{ .ID }}">
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </div>
+            {{ end }}
+
+            <a href="/cart">View Cart</a>
+            <div id="cart"></div>
+            
+            <script>
+                var ws = new WebSocket("ws://" + window.location.host + "/ws");
+                ws.onmessage = function(event) {
+                    document.getElementById('cart').innerText = event.data;
+                };
+            </script>
+        </body>
+        </html>
